@@ -394,4 +394,21 @@ resource "aws_subnet" "wp_rds3_subnet" {
 }
 #+END_SRC
 
-#+RESULTS:
+*** Subnet Groups
+#+BEGIN_SRC bash
+# RDS Subnet Group
+
+resource "aws_db_subnet_group" "wp_rds_subnetgroup" {
+  name = "wp_rds_subnet_group"
+
+  subnet_ids = [
+    "${aws_subnet.wp_rds1_subnet.id}",
+    "${aws_subnet.wp_rds2_subnet.id}",
+    "${aws_subnet.wp_rds3_subnet.id}"
+  ]
+
+  tags {
+    Name = "wp_rds_sng"
+  }
+}
+#+END_SRC
