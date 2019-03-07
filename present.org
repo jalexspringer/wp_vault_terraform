@@ -1,0 +1,269 @@
+#+TITLE: Flux7 Vault Presentation
+#+AUTHOR: Alex Springer
+#+PROPERTY: results raw
+* Overview
+
+* Config
+** Development Machine Setup
+*** Tools
+- Python 3.7.2
+- Terraform v0.11.11
+- ansible 2.7.7
+*** SSH
+#+BEGIN_SRC bash
+ssh-keygen
+ssh-agent bash
+ssh-add ~/.ssh/cloudbase
+#+END_SRC
+** AWS Setup
+- New User: cloudbase
+#+BEGIN_SRC bash
+aws configure --profile cb
+#+END_SRC
+
+*** Configure Route53
+atcloudbase.net
+- Get Route53 re-usable delegation set
+  #+BEGIN_SRC bash
+aws route53 create-reusable-delegation-set --caller-reference 1224 --profile cb
+  #+END_SRC
+
+  #+RESULTS:
+  | Location        | https://route53.amazonaws.com/2013-04-01/delegationset/N2WOUDW0QCOUSM |
+  | DelegationSet   |                                                                       |
+  | Id              | /delegationset/N2WOUDW0QCOUSM                                         |
+  | CallerReference | 1224                                                                  |
+  | NameServers     |                                                                       |
+  |                 | ns-778.awsdns-33.net                                                  |
+  |                 | ns-1637.awsdns-12.co.uk                                               |
+  |                 | ns-1071.awsdns-05.org                                                 |
+  |                 | ns-343.awsdns-42.com                                                  |
+
+- Update nameservers for atcloudbase.net
+
+* Terraforming
+:PROPERTIES:
+:header-args: :padline no :results raw
+:END:
+
+#+BEGIN_SRC bash
+# Terraform files
+touch main.tf variables.tf terraform.tfvars
+echo terraform.tfvars >> .gitignore
+# Ansible and AWS files
+touch userdata aws_hosts wordpress.yml s3update.yml
+#+END_SRC
+
+** Region and profile setup:
+#+BEGIN_SRC bash :tangle terraform.tfvars
+aws_profile = "cb"
+aws_region  = "us-east-1"
+#+END_SRC
+
+#+BEGIN_SRC bash :tangle main.tf
+provider "aws" {
+  region  = "${var.aws_region}"
+  profile = "${var.aws_profile}"
+}
+#+END_SRC
+
+#+BEGIN_SRC bash :tangle variables.tf
+variable "aws_region"  {}
+variable "aws_profile" {}
+#+END_SRC
+
+** Initialize Terraform
+#+BEGIN_SRC bash :results raw
+terraform init
+#+END_SRC
+
+#+BEGIN_SRC bash :results raw
+terraform plan
+#+END_SRC
+
+#+RESULTS:
+[0m[1mRefreshing Terraform state in-memory prior to plan...[0m
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+[0m
+
+------------------------------------------------------------------------
+
+[0m[1m[32mNo changes. Infrastructure is up-to-date.[0m[32m
+
+This means that Terraform did not detect any differences between your
+configuration and real physical resources that exist. As a result, no
+actions need to be performed.[0m
+
+** IAM Access Roles (s3)
+#+BEGIN_SRC bash :tangle main.tf
+#----- IAM -----
+
+#S3_access
+resource "aws_iam_instance_profile" "s3_access_profile" {
+  name = "s3_access"
+  role = "${aws_iam_role.s3_access_role.name}"
+}
+
+resource "aws_iam_role_policy" "s3_access_policy" {
+  name = "s3_access_policy"
+  role = "${aws_iam_role.s3_access_role.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": "*"
+      }
+    ]
+  }
+EOF
+}
+
+
+resource "aws_iam_role" "s3_access_role" {
+  name = "s3_access_role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+        "Action": "sts:AssumeRole",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+          },
+        "Effect": "Allow",
+        "Sid": ""
+      }
+    ]
+  }
+EOF
+}
+#+END_SRC
+
+#+BEGIN_SRC bash :results raw
+terraform plan -no-color
+#+END_SRC
+
+#+RESULTS:
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
++ aws_iam_instance_profile.s3_access_profile
+      id:                    <computed>
+      arn:                   <computed>
+      create_date:           <computed>
+      name:                  "s3_access"
+      path:                  "/"
+      role:                  "s3_access_role"
+      roles.#:               <computed>
+      unique_id:             <computed>
+
+  + aws_iam_role.s3_access_role
+      id:                    <computed>
+      arn:                   <computed>
+      assume_role_policy:    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n      {\n        \"Action\": \"sts:AssumeRole\",\n        \"Principal\": {\n          \"Service\": \"ec2.amazonaws.com\"\n          },\n        \"Effect\": \"Allow\",\n        \"Sid\": \"\"\n      }\n    ]\n  }\n"
+      create_date:           <computed>
+      force_detach_policies: "false"
+      max_session_duration:  "3600"
+      name:                  "s3_access_role"
+      path:                  "/"
+      unique_id:             <computed>
+
+  + aws_iam_role_policy.s3_access_policy
+      id:                    <computed>
+      name:                  "s3_access_policy"
+      policy:                "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:*\",\n      \"Resource\": \"*\"\n      }\n    ]\n  }\n"
+      role:                  "${aws_iam_role.s3_access_role.id}"
+Plan: 3 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+
+** Create the VPC
+*** VPC Setup
+Define the VPC resource, references CIDR block variable
+#+BEGIN_SRC bash :tangle main.tf
+#----- VPC ------
+
+resource "aws_vpc" "wp_vpc" {
+  cidr_block           = "${var.vpc_cidr}"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  tags {
+    Name = "wp_vpc"
+  }
+}
+#+END_SRC
+
+Define the CIDR block variable in terraform.tfvars and variables.tf
+#+BEGIN_SRC bash :tangle terraform.tfvars
+vpc_cidr = "10.0.0.0/16"
+#+END_SRC
+#+BEGIN_SRC bash :tangle variables.tf :padline no
+variable "vpc_cidr" {}
+#+END_SRC
+
+*** Internet Gateway
+#+BEGIN_SRC bash :tangle main.tf
+
+# Internet Gateway
+resource "aws_internet_gateway" "wp_internet_gateway" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+
+  tags {
+    Name = "wp_igw"
+  }
+}
+
+#+END_SRC
+
+*** Route Tables
+#+BEGIN_SRC bash :tangle main.tf
+
+# Route Tables
+resource "aws_route_table" "wp_public_rt" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.wp_internet_gateway.id}"
+  }
+
+  tags {
+    Name = "wp_public"
+  }
+}
+
+resource "aws_default_route_table" "wp_private_rt" {
+  default_route_table_id = "${aws_vpc.wp_vpc.default_route_table_id}"
+
+  tags {
+    Name = "wp_private"
+  }
+}
+#+END_SRC
+
+*** Subnets
+Gather the availability zone information
+#+BEGIN_SRC bash :tangle variables.tf
+data "aws_availability_zones" "available" {}
+#+END_SRC
