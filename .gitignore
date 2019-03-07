@@ -1,3 +1,4 @@
-terraform.tfvars
+*.tfvars
 credentials.csv
 .terraform
+*.plan
