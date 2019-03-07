@@ -1,7 +1,21 @@
 #+TITLE: Flux7 Vault Presentation
 #+AUTHOR: Alex Springer
-#+PROPERTY: results raw
-* Overview
+* Introduction
+Walking through creating a highly available Wordpress blog using AWS and
+Terraform. We'll then ensure high security by leveraging the power of Hashicorp
+Vault to centralize control and auditing of secrets and access rights.
+
+** Why use Vault?
+- Dynamic generation of AWS access credentials based on IAM policies defined and
+  maintained via Terraform (Ifrastructure as Code practices)
+- Smaller attack surface - all secret are managed and distributed as needed with
+  a defined TTL to the various components of the application
+- Microservices friendly 'break glass' policies - respond to security breaches
+  in a targeted fashion that locks down only the affected parts of the system,
+  leading to higher durability and shorter recovery time
+- Full audit trail of all access and secret usage combined with easy to define
+  TTL to ensure correct access for all users
+- Simple encryption API for sensitive user/customer data
 
 * Config
 ** Development Machine Setup
@@ -46,12 +60,20 @@ aws route53 create-reusable-delegation-set --caller-reference 1224 --profile cb
 :header-args: :padline no :results raw
 :END:
 
+Directory/file structure
 #+BEGIN_SRC bash
 # Terraform files
-touch main.tf variables.tf terraform.tfvars
-echo terraform.tfvars >> .gitignore
+touch main.tf variables.tf terraform.tfvars vpc.tf iam.tf
 # Ansible and AWS files
 touch userdata aws_hosts wordpress.yml s3update.yml
+#+END_SRC
+
+Keeping secrets from git
+#+BEGIN_SRC bash :tangle .gitignore
+*.tfvars
+credentials.csv
+.terraform
+*.plan
 #+END_SRC
 
 ** Region and profile setup:
@@ -60,7 +82,7 @@ aws_profile = "cb"
 aws_region  = "us-east-1"
 #+END_SRC
 
-#+BEGIN_SRC bash :tangle main.tf
+#+BEGIN_SRC bash :tangle config.tf
 provider "aws" {
   region  = "${var.aws_region}"
   profile = "${var.aws_profile}"
@@ -77,8 +99,8 @@ variable "aws_profile" {}
 terraform init
 #+END_SRC
 
-#+BEGIN_SRC bash :results raw
-terraform plan
+#+BEGIN_SRC bash :results raw :tangle no
+terraform plan -no-color
 #+END_SRC
 
 #+RESULTS:
@@ -96,7 +118,10 @@ configuration and real physical resources that exist. As a result, no
 actions need to be performed.[0m
 
 ** IAM Access Roles (s3)
-#+BEGIN_SRC bash :tangle main.tf
+:PROPERTIES:
+:header-args: :tangle iam.tf
+:END:
+#+BEGIN_SRC bash
 #----- IAM -----
 
 #S3_access
@@ -145,7 +170,7 @@ EOF
 }
 #+END_SRC
 
-#+BEGIN_SRC bash :results raw
+#+BEGIN_SRC bash :results raw :tangle no
 terraform plan -no-color
 #+END_SRC
 
@@ -198,9 +223,12 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 
 ** Create the VPC
+:PROPERTIES:
+:header-args: :padline no :results raw :tangle vpc.tf
+:END:
 *** VPC Setup
 Define the VPC resource, references CIDR block variable
-#+BEGIN_SRC bash :tangle main.tf
+#+BEGIN_SRC bash
 #----- VPC ------
 
 resource "aws_vpc" "wp_vpc" {
@@ -223,7 +251,7 @@ variable "vpc_cidr" {}
 #+END_SRC
 
 *** Internet Gateway
-#+BEGIN_SRC bash :tangle main.tf
+#+BEGIN_SRC bash
 
 # Internet Gateway
 resource "aws_internet_gateway" "wp_internet_gateway" {
@@ -237,7 +265,7 @@ resource "aws_internet_gateway" "wp_internet_gateway" {
 #+END_SRC
 
 *** Route Tables
-#+BEGIN_SRC bash :tangle main.tf
+#+BEGIN_SRC bash
 
 # Route Tables
 resource "aws_route_table" "wp_public_rt" {
@@ -263,7 +291,107 @@ resource "aws_default_route_table" "wp_private_rt" {
 #+END_SRC
 
 *** Subnets
-Gather the availability zone information
+Gather the availability zone information and create cidr blocks array
+#+BEGIN_SRC bash :tangle terraform.tfvars
+cidrs = {
+  public1  = "10.0.1.0/24"
+  public2  = "10.0.2.0/24"
+  private1 = "10.0.3.0/24"
+  private2 = "10.0.4.0/24"
+  rds1     = "10.0.5.0/24"
+  rds2     = "10.0.6.0/24"
+  rds3     = "10.0.7.0/24"
+}
+#+END_SRC
+
 #+BEGIN_SRC bash :tangle variables.tf
 data "aws_availability_zones" "available" {}
+variable "cidrs" {
+  type = "map"
+}
 #+END_SRC
+
+#+BEGIN_SRC bash
+# Subnets
+# Public subnets
+resource "aws_subnet" "wp_public1_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["public1"]}"
+  map_public_ip_on_launch = true
+  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+
+  tags {
+    Name = "wp_public1"
+  }
+}
+
+resource "aws_subnet" "wp_public2_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["public2"]}"
+  map_public_ip_on_launch = true
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+
+  tags {
+    Name = "wp_public2"
+  }
+}
+
+# Private Subnets
+resource "aws_subnet" "wp_private1_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["private1"]}"
+  map_public_ip_on_launch = false
+  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+
+  tags {
+    Name = "wp_private1"
+  }
+}
+
+resource "aws_subnet" "wp_private2_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["private2"]}"
+  map_public_ip_on_launch = false
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+
+  tags {
+    Name = "wp_private2"
+  }
+}
+
+# RDS Subnets
+resource "aws_subnet" "wp_rds1_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["rds1"]}"
+  map_public_ip_on_launch = false
+  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+
+  tags {
+    Name = "wp_rds1"
+  }
+}
+
+resource "aws_subnet" "wp_rds2_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["rds2"]}"
+  map_public_ip_on_launch = false
+  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+
+  tags {
+    Name = "wp_rds2"
+  }
+}
+
+resource "aws_subnet" "wp_rds3_subnet" {
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+  cidr_block = "${var.cidrs["rds3"]}"
+  map_public_ip_on_launch = false
+  availability_zone = "${data.aws_availability_zones.available.names[2]}"
+
+  tags {
+    Name = "wp_rds3"
+  }
+}
+#+END_SRC
+
+#+RESULTS:
