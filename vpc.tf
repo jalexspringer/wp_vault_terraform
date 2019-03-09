@@ -118,3 +118,51 @@ resource "aws_subnet" "wp_rds3_subnet" {
     Name = "wp_rds3"
   }
 }
+# RDS Subnet Group
+
+resource "aws_db_subnet_group" "wp_rds_subnetgroup" {
+  name = "wp_rds_subnetgroup"
+
+  subnet_ids = [
+    "${aws_subnet.wp_rds1_subnet.id}",
+    "${aws_subnet.wp_rds2_subnet.id}",
+    "${aws_subnet.wp_rds3_subnet.id}"
+  ]
+
+  tags {
+    Name = "wp_rds_sng"
+  }
+}
+# Public Subnet Associations
+
+resource "aws_route_table_association" "wp_public_assoc1" {
+  subnet_id = "${aws_subnet.wp_public1_subnet.id}"
+  route_table_id = "${aws_route_table.wp_public_rt.id}"
+}
+
+resource "aws_route_table_association" "wp_public_assoc2" {
+  subnet_id = "${aws_subnet.wp_public2_subnet.id}"
+  route_table_id = "${aws_route_table.wp_public_rt.id}"
+}
+# ----- S3 VPC Endpoint -----
+
+resource "aws_vpc_endpoint" "wp_private-s3_endpoint" {
+  service_name = "com.amazonaws.${var.aws_region}.s3"
+  vpc_id = "${aws_vpc.wp_vpc.id}"
+
+  route_table_ids = ["${aws_vpc.wp_vpc.main_route_table_id}",
+                     "${aws_route_table.wp_public_rt.id}"
+                    ]
+  policy = <<POLICY
+{
+    "Statement": [
+      {
+        "Action": "*",
+        "Effect": "Allow",
+        "Resource": "*",
+        "Principal": "*"
+      }
+    ]
+}
+POLICY
+}
