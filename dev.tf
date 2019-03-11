@@ -22,6 +22,7 @@ resource "aws_instance" "wp_dev" {
   iam_instance_profile = "${aws_iam_instance_profile.s3_access_profile.id}"
   subnet_id = "${aws_subnet.wp_public1_subnet.id}"
 
+  # user_data = "${data.template_file.user_data.rendered}"
   provisioner "local-exec" {
     command = <<EOD
 cat <<EOF > aws_hosts
@@ -33,8 +34,18 @@ domain=${var.domain_name}
 EOF
 EOD
   }
+    provisioner "local-exec" {
+        command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.wp_dev.id} --profile ${var.aws_profile} && ansible-playbook -i aws_hosts --extra-vars 'dbname=${var.dbname} dbuser=${random_string.username.result} dbpass=${random_string.password.result}' wordpress.yml"
+   }
+}
+# Auto-install Wordpress With Creds and wp-config.php already sorted
 
-  provisioner "local-exec" {
-    command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.wp_dev.id} --profile ${var.aws_profile} && ansible-playbook -i aws_hosts wordpress.yml"
+data "template_file" "user_data" {
+  template = "${file("user_data.tpl")}"
+
+  vars {
+   dbuser = "${random_string.username.result}",
+   dbpass = "${random_string.password.result}",
+   dbname = "${var.dbname}"
   }
 }

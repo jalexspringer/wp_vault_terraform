@@ -6,7 +6,7 @@ variable "cidrs" {
   type = "map"
 }
 variable "localip" {}
-variable domain_name {}
+variable "domain_name" {}
 variable "db_instance_class" {}
 variable "dbname" {}
 variable "dbuser" {}
@@ -26,3 +26,6 @@ variable "asg_grace" {}
 variable "asg_hct" {}
 variable "asg_cap" {}
 variable "delegation_set" {}
+variable "service_name" {}
+variable "blog_name" {}
+variable "vault_token" {}

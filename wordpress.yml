@@ -9,10 +9,6 @@
       - httpd
       - php
       - php-mysql
-    - name: Download Wordpress
-      get_url: url=http://wordpress.org/wordpress-latest.tar.gz dest=/var/www/html/wordpress.tar.gz force=yes
-    - name: Extract Wordpress
-      command: "tar xzf /var/www/html/wordpress.tar.gz -C /var/www/html --strip-components 1"
     - name: Make Dir Tree Readable
       file:
         path: /var/www/html
@@ -20,5 +16,29 @@
         recurse: yes
         owner: apache
         group: apache
+    - name: Download Wordpress
+      get_url: url=http://wordpress.org/wordpress-latest.tar.gz dest=/var/www/html/wordpress.tar.gz force=yes
+    - name: Extract Wordpress
+      command: "tar xzf /var/www/html/wordpress.tar.gz -C /var/www/html --strip-components 1"
+    - name: Copy wp-config-sample.php to wp-config.php
+      command: cp "/var/www/html/wp-config-sample.php" "/var/www/html/wp-config.php"
+    - name: Update database credentials in the file
+      replace:
+        path: "/var/www/html/wp-config.php"
+        regexp: "password_here"
+        replace: "{{ dbpass }}"
+
+    - name: Update database name in the file
+      replace:
+        path: "/var/www/html/wp-config.php"
+        regexp: "database_name_here"
+        replace: "{{ dbname }}"
+
+    - name: Update database user in the file
+      replace:
+        path: "/var/www/html/wp-config.php"
+        regexp: "username_here"
+        replace: "{{ dbuser }}"
+
     - name: Start and enable Apache
       service: name=httpd state=started enabled=yes
