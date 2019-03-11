@@ -40,5 +40,12 @@
         regexp: "username_here"
         replace: "{{ dbuser }}"
 
+    - name: Update database address in the file
+      replace:
+        path: "/var/www/html/wp-config.php"
+        regexp: "localhost"
+        replace: "{{ dbaddr }}"
+
+
     - name: Start and enable Apache
       service: name=httpd state=started enabled=yes

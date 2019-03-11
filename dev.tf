@@ -35,7 +35,7 @@ EOF
 EOD
   }
     provisioner "local-exec" {
-        command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.wp_dev.id} --profile ${var.aws_profile} && ansible-playbook -i aws_hosts --extra-vars 'dbname=${var.dbname} dbuser=${random_string.username.result} dbpass=${random_string.password.result}' wordpress.yml"
+        command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.wp_dev.id} --profile ${var.aws_profile} && ansible-playbook -i aws_hosts --extra-vars 'dbname=${var.dbname} dbuser=${random_string.username.result} dbpass=${random_string.password.result} dbaddr=db.${var.domain_name}.net' wordpress.yml"
    }
 }
 # Auto-install Wordpress With Creds and wp-config.php already sorted

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-03-10 Sun 13:42 -->
+<!-- 2019-03-11 Mon 13:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Flux7 WP/Vault Presentation</title>
@@ -247,99 +247,99 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd01b4f5">1. Introduction</a>
+<li><a href="#org10a28c2">1. Introduction</a>
 <ul>
-<li><a href="#org714e06f">1.1. Why use Vault?</a></li>
-<li><a href="#org04cd525">1.2. WP Deployment</a></li>
+<li><a href="#org4931147">1.1. Why use Vault?</a></li>
+<li><a href="#org1671792">1.2. WP Deployment</a></li>
 </ul>
 </li>
-<li><a href="#orgf2e7895">2. Config</a>
+<li><a href="#org0741d83">2. Config</a>
 <ul>
-<li><a href="#org5a9f41d">2.1. Development Machine Setup</a>
+<li><a href="#org897cdcd">2.1. Development Machine Setup</a>
 <ul>
-<li><a href="#orgbcac396">2.1.1. Tools</a></li>
+<li><a href="#orgd4ba76f">2.1.1. Tools</a></li>
 </ul>
 </li>
-<li><a href="#org0e8a9ca">2.2. AWS Setup</a>
+<li><a href="#org5a87fee">2.2. AWS Setup</a>
 <ul>
-<li><a href="#org0bedafd">2.2.1. Configure Route53</a></li>
+<li><a href="#orgdecd9c0">2.2.1. Configure Route53</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org6c85efb">3. Terraforming</a>
+<li><a href="#org66ee702">3. Terraforming</a>
 <ul>
-<li><a href="#org826a3ed">3.1. Region and profile setup:</a></li>
-<li><a href="#org1134586">3.2. Initialize Terraform</a></li>
-<li><a href="#org77155b3">3.3. IAM Access Roles (s3)</a></li>
-<li><a href="#orgd63ed82">3.4. Create the VPC</a>
+<li><a href="#org536c7c2">3.1. Region and profile setup</a></li>
+<li><a href="#org9d71b0e">3.2. Initialize Terraform</a></li>
+<li><a href="#orga8fcb8f">3.3. IAM Access Roles (s3)</a></li>
+<li><a href="#org4b58f01">3.4. Create the VPC</a>
 <ul>
-<li><a href="#org010264f">3.4.1. VPC Setup</a></li>
-<li><a href="#orge4343b1">3.4.2. Internet Gateway</a></li>
-<li><a href="#org01dfd0a">3.4.3. Route Tables</a></li>
-<li><a href="#orgc81abcf">3.4.4. Subnets</a></li>
-<li><a href="#orgbc641e8">3.4.5. Subnet Groups</a></li>
+<li><a href="#org1a2787e">3.4.1. VPC Setup</a></li>
+<li><a href="#org01518ee">3.4.2. Internet Gateway</a></li>
+<li><a href="#org4dfb0df">3.4.3. Route Tables</a></li>
+<li><a href="#org12d73db">3.4.4. Subnets</a></li>
+<li><a href="#orgbd81372">3.4.5. Subnet Groups</a></li>
 </ul>
 </li>
-<li><a href="#org4dca91d">3.5. Security Groups</a>
+<li><a href="#orgcc65e70">3.5. Security Groups</a>
 <ul>
-<li><a href="#org61fe094">3.5.1. ELB</a></li>
-<li><a href="#org4cc6182">3.5.2. Dev Instance</a></li>
-<li><a href="#orga1feea4">3.5.3. Private Instances (Auto-scaling Group)</a></li>
-<li><a href="#org425f273">3.5.4. Database</a></li>
+<li><a href="#org368ac6e">3.5.1. ELB</a></li>
+<li><a href="#org1447ef8">3.5.2. Dev Instance</a></li>
+<li><a href="#org82c8e19">3.5.3. Private Instances (Auto-scaling Group)</a></li>
+<li><a href="#orge2f05f1">3.5.4. Database</a></li>
 </ul>
 </li>
-<li><a href="#org22e11bc">3.6. S3 Bucket and VPC Endpoint</a>
+<li><a href="#orge97da8d">3.6. S3 Bucket and VPC Endpoint</a>
 <ul>
-<li><a href="#org4f2627e">3.6.1. VPC Endpoint</a></li>
-<li><a href="#org0c04957">3.6.2. S3 Bucket</a></li>
+<li><a href="#orgca991bf">3.6.1. VPC Endpoint</a></li>
+<li><a href="#org0609c18">3.6.2. S3 Bucket</a></li>
 </ul>
 </li>
-<li><a href="#org19847a2">3.7. RDS</a></li>
-<li><a href="#orgd65b472">3.8. ELB</a></li>
-<li><a href="#org8ab841b">3.9. Creating the Dev Instance</a></li>
-<li><a href="#orgf4bce23">3.10. Golden AMI</a></li>
-<li><a href="#org95d895d">3.11. Auto-scaling Group and Launch Configuration</a></li>
-<li><a href="#org06c912a">3.12. Route 53 Records</a></li>
+<li><a href="#orgdf9a1e4">3.7. RDS</a></li>
+<li><a href="#org2cf6deb">3.8. ELB</a></li>
+<li><a href="#org0c5144e">3.9. Creating the Dev Instance</a></li>
+<li><a href="#orgde711f2">3.10. Golden AMI</a></li>
+<li><a href="#orgf6ac4b2">3.11. Auto-scaling Group and Launch Configuration</a></li>
+<li><a href="#org82b8509">3.12. Route 53 Records</a></li>
 </ul>
 </li>
-<li><a href="#org864b526">4. Ansible</a>
+<li><a href="#orgfc3b5dd">4. Ansible</a>
 <ul>
-<li><a href="#orgb83dc9e">4.1. Install Wordpress</a></li>
-<li><a href="#org2fefe8f">4.2. S3 Update</a></li>
+<li><a href="#org71a51a0">4.1. Install Wordpress</a></li>
+<li><a href="#org01c8ccf">4.2. S3 Update</a></li>
 </ul>
 </li>
-<li><a href="#org501f97f">5. Time to Apply!</a>
+<li><a href="#orgd0f2937">5. Time to Apply!</a>
 <ul>
-<li><a href="#org78eedb7">5.1. Next Steps</a></li>
+<li><a href="#orgd3891c6">5.1. Next Steps</a></li>
 </ul>
 </li>
-<li><a href="#orgc463b10">6. Adding the Vault</a>
+<li><a href="#org3fbcfa0">6. Adding the Vault</a>
 <ul>
-<li><a href="#org09f318e">6.1. Deploy Vault in the VPC</a></li>
-<li><a href="#orgfcbc327">6.2. Security in depth with terraform and vault</a>
+<li><a href="#orga1ea9a7">6.1. Deploy Vault in the VPC</a></li>
+<li><a href="#org9231829">6.2. Security in depth with terraform and vault</a>
 <ul>
-<li><a href="#org627921a">6.2.1. basic principles for securing terraform state</a></li>
-<li><a href="#org489e46e">6.2.2. secrets generation and management in terraform</a></li>
-<li><a href="#org30aa2f6">6.2.3. showcasae dynamic secrets engine with vault</a></li>
-<li><a href="#orgcf2ccae">6.2.4. example terraform/vault integrations</a></li>
+<li><a href="#org2600225">6.2.1. basic principles for securing terraform state</a></li>
+<li><a href="#org3344685">6.2.2. secrets generation and management in terraform</a></li>
+<li><a href="#org51048b3">6.2.3. showcasae dynamic secrets engine with vault</a></li>
+<li><a href="#orge4019b2">6.2.4. example terraform/vault integrations</a></li>
 </ul>
 </li>
-<li><a href="#orga0c05ab">6.3. Using dynamic secrets to generate access credentials for secure terraform use</a></li>
-<li><a href="#org6ed9f7b">6.4. Generating random DB credentials and storing them in vault</a></li>
+<li><a href="#orgbd3bd9b">6.3. Using dynamic secrets to generate access credentials for secure terraform use</a></li>
+<li><a href="#org195d1ee">6.4. Generating random DB credentials and storing them in vault</a></li>
 </ul>
 </li>
-<li><a href="#orgcc9a56c">7. TODOS <code>[0/2]</code></a>
+<li><a href="#org34ae8d4">7. TODOS <code>[0/2]</code></a>
 <ul>
-<li><a href="#orgf40d51c">7.1. <span class="todo TODO">TODO</span> Add a bastion host to get into production via SSH</a></li>
-<li><a href="#orga3c9f0f">7.2. <span class="todo TODO">TODO</span> Secure key access to bastion host with Vault</a></li>
+<li><a href="#orgeca326a">7.1. <span class="todo TODO">TODO</span> Add a bastion host to get into production via SSH</a></li>
+<li><a href="#org6776e5b">7.2. <span class="todo TODO">TODO</span> Secure key access to dev host with Vault</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd01b4f5" class="outline-2">
-<h2 id="orgd01b4f5"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-org10a28c2" class="outline-2">
+<h2 id="org10a28c2"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Walking through creating a highly available Wordpress blog using AWS and
@@ -348,8 +348,8 @@ Vault to centralize control and auditing of secrets and access rights.
 </p>
 </div>
 
-<div id="outline-container-org714e06f" class="outline-3">
-<h3 id="org714e06f"><span class="section-number-3">1.1</span> Why use Vault?</h3>
+<div id="outline-container-org4931147" class="outline-3">
+<h3 id="org4931147"><span class="section-number-3">1.1</span> Why use Vault?</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li>Dynamic generation of AWS access credentials based on IAM policies defined and
@@ -366,8 +366,8 @@ TTL to ensure correct access for all users</li>
 </div>
 </div>
 
-<div id="outline-container-org04cd525" class="outline-3">
-<h3 id="org04cd525"><span class="section-number-3">1.2</span> WP Deployment</h3>
+<div id="outline-container-org1671792" class="outline-3">
+<h3 id="org1671792"><span class="section-number-3">1.2</span> WP Deployment</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 <a href="plan.png">Architecture Diagram</a>
@@ -376,16 +376,16 @@ TTL to ensure correct access for all users</li>
 </div>
 </div>
 
-<div id="outline-container-orgf2e7895" class="outline-2">
-<h2 id="orgf2e7895"><span class="section-number-2">2</span> Config</h2>
+<div id="outline-container-org0741d83" class="outline-2">
+<h2 id="org0741d83"><span class="section-number-2">2</span> Config</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5a9f41d" class="outline-3">
-<h3 id="org5a9f41d"><span class="section-number-3">2.1</span> Development Machine Setup</h3>
+<div id="outline-container-org897cdcd" class="outline-3">
+<h3 id="org897cdcd"><span class="section-number-3">2.1</span> Development Machine Setup</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-orgbcac396" class="outline-4">
-<h4 id="orgbcac396"><span class="section-number-4">2.1.1</span> Tools</h4>
+<div id="outline-container-orgd4ba76f" class="outline-4">
+<h4 id="orgd4ba76f"><span class="section-number-4">2.1.1</span> Tools</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <ul class="org-ul">
 <li>Python 3.7.2</li>
@@ -395,8 +395,8 @@ TTL to ensure correct access for all users</li>
 </div>
 </div>
 </div>
-<div id="outline-container-org0e8a9ca" class="outline-3">
-<h3 id="org0e8a9ca"><span class="section-number-3">2.2</span> AWS Setup</h3>
+<div id="outline-container-org5a87fee" class="outline-3">
+<h3 id="org5a87fee"><span class="section-number-3">2.2</span> AWS Setup</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>New User: cloudbase</li>
@@ -407,8 +407,8 @@ TTL to ensure correct access for all users</li>
 </div>
 </div>
 
-<div id="outline-container-org0bedafd" class="outline-4">
-<h4 id="org0bedafd"><span class="section-number-4">2.2.1</span> Configure Route53</h4>
+<div id="outline-container-orgdecd9c0" class="outline-4">
+<h4 id="orgdecd9c0"><span class="section-number-4">2.2.1</span> Configure Route53</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 atcloudbase.net
@@ -429,18 +429,9 @@ Get Route53 re-usable delegation set
 </div>
 </div>
 
-<div id="outline-container-org6c85efb" class="outline-2">
-<h2 id="org6c85efb"><span class="section-number-2">3</span> Terraforming</h2>
+<div id="outline-container-org66ee702" class="outline-2">
+<h2 id="org66ee702"><span class="section-number-2">3</span> Terraforming</h2>
 <div class="outline-text-2" id="text-3">
-<p>
-Directory/file structure
-</p>
-<div class="org-src-container">
-<pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;"># </span><span style="color: #96A7A9; font-style: italic;">Ansible and AWS files</span>
-<span style="color: #b58900; font-style: italic;">touch</span> userdata aws_hosts wordpress.yml s3update.yml
-</pre>
-</div>
-
 <p>
 Keeping secrets from git
 </p>
@@ -456,8 +447,8 @@ credentials.csv
 </div>
 </div>
 
-<div id="outline-container-org826a3ed" class="outline-3">
-<h3 id="org826a3ed"><span class="section-number-3">3.1</span> Region and profile setup:</h3>
+<div id="outline-container-org536c7c2" class="outline-3">
+<h3 id="org536c7c2"><span class="section-number-3">3.1</span> Region and profile setup</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-bash">aws_profile = <span style="color: #2aa198;">"cb"</span>
@@ -482,8 +473,8 @@ variable <span style="color: #2aa198;">"aws_profile"</span> <span style="color: 
 </div>
 </div>
 
-<div id="outline-container-org1134586" class="outline-3">
-<h3 id="org1134586"><span class="section-number-3">3.2</span> Initialize Terraform</h3>
+<div id="outline-container-org9d71b0e" class="outline-3">
+<h3 id="org9d71b0e"><span class="section-number-3">3.2</span> Initialize Terraform</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-bash">terraform init
@@ -491,8 +482,8 @@ variable <span style="color: #2aa198;">"aws_profile"</span> <span style="color: 
 </div>
 </div>
 </div>
-<div id="outline-container-org77155b3" class="outline-3">
-<h3 id="org77155b3"><span class="section-number-3">3.3</span> IAM Access Roles (s3)</h3>
+<div id="outline-container-orga8fcb8f" class="outline-3">
+<h3 id="orga8fcb8f"><span class="section-number-3">3.3</span> IAM Access Roles (s3)</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">----- IAM -----</span>
@@ -546,12 +537,12 @@ resource <span style="color: #2aa198;">"aws_iam_role"</span> <span style="color:
 </div>
 </div>
 
-<div id="outline-container-orgd63ed82" class="outline-3">
-<h3 id="orgd63ed82"><span class="section-number-3">3.4</span> Create the VPC</h3>
+<div id="outline-container-org4b58f01" class="outline-3">
+<h3 id="org4b58f01"><span class="section-number-3">3.4</span> Create the VPC</h3>
 <div class="outline-text-3" id="text-3-4">
 </div>
-<div id="outline-container-org010264f" class="outline-4">
-<h4 id="org010264f"><span class="section-number-4">3.4.1</span> VPC Setup</h4>
+<div id="outline-container-org1a2787e" class="outline-4">
+<h4 id="org1a2787e"><span class="section-number-4">3.4.1</span> VPC Setup</h4>
 <div class="outline-text-4" id="text-3-4-1">
 <p>
 Define the VPC resource, references CIDR block variable
@@ -585,8 +576,8 @@ Define the CIDR block variable in terraform.tfvars and variables.tf
 </div>
 </div>
 
-<div id="outline-container-orge4343b1" class="outline-4">
-<h4 id="orge4343b1"><span class="section-number-4">3.4.2</span> Internet Gateway</h4>
+<div id="outline-container-org01518ee" class="outline-4">
+<h4 id="org01518ee"><span class="section-number-4">3.4.2</span> Internet Gateway</h4>
 <div class="outline-text-4" id="text-3-4-2">
 <div class="org-src-container">
 <pre class="src src-bash">
@@ -604,8 +595,8 @@ resource <span style="color: #2aa198;">"aws_internet_gateway"</span> <span style
 </div>
 </div>
 
-<div id="outline-container-org01dfd0a" class="outline-4">
-<h4 id="org01dfd0a"><span class="section-number-4">3.4.3</span> Route Tables</h4>
+<div id="outline-container-org4dfb0df" class="outline-4">
+<h4 id="org4dfb0df"><span class="section-number-4">3.4.3</span> Route Tables</h4>
 <div class="outline-text-4" id="text-3-4-3">
 <div class="org-src-container">
 <pre class="src src-bash">
@@ -635,8 +626,8 @@ resource <span style="color: #2aa198;">"aws_default_route_table"</span> <span st
 </div>
 </div>
 
-<div id="outline-container-orgc81abcf" class="outline-4">
-<h4 id="orgc81abcf"><span class="section-number-4">3.4.4</span> Subnets</h4>
+<div id="outline-container-org12d73db" class="outline-4">
+<h4 id="org12d73db"><span class="section-number-4">3.4.4</span> Subnets</h4>
 <div class="outline-text-4" id="text-3-4-4">
 <p>
 Gather the availability zone information and create cidr blocks array
@@ -749,8 +740,8 @@ resource <span style="color: #2aa198;">"aws_subnet"</span> <span style="color: #
 </div>
 
 
-<div id="outline-container-orgbc641e8" class="outline-4">
-<h4 id="orgbc641e8"><span class="section-number-4">3.4.5</span> Subnet Groups</h4>
+<div id="outline-container-orgbd81372" class="outline-4">
+<h4 id="orgbd81372"><span class="section-number-4">3.4.5</span> Subnet Groups</h4>
 <div class="outline-text-4" id="text-3-4-5">
 <p>
 RDS Groups
@@ -805,13 +796,13 @@ Clean up - terraform the terraforming
 </div>
 </div>
 
-<div id="outline-container-org4dca91d" class="outline-3">
-<h3 id="org4dca91d"><span class="section-number-3">3.5</span> Security Groups</h3>
+<div id="outline-container-orgcc65e70" class="outline-3">
+<h3 id="orgcc65e70"><span class="section-number-3">3.5</span> Security Groups</h3>
 <div class="outline-text-3" id="text-3-5">
 </div>
 
-<div id="outline-container-org61fe094" class="outline-4">
-<h4 id="org61fe094"><span class="section-number-4">3.5.1</span> ELB</h4>
+<div id="outline-container-org368ac6e" class="outline-4">
+<h4 id="org368ac6e"><span class="section-number-4">3.5.1</span> ELB</h4>
 <div class="outline-text-4" id="text-3-5-1">
 <p>
 Port 80 open
@@ -845,15 +836,15 @@ resource <span style="color: #2aa198;">"aws_security_group"</span> <span style="
 </div>
 </div>
 
-<div id="outline-container-org4cc6182" class="outline-4">
-<h4 id="org4cc6182"><span class="section-number-4">3.5.2</span> Dev Instance</h4>
+<div id="outline-container-org1447ef8" class="outline-4">
+<h4 id="org1447ef8"><span class="section-number-4">3.5.2</span> Dev Instance</h4>
 <div class="outline-text-4" id="text-3-5-2">
 <p>
 HTTP, SSH access from local IP
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">localip = <span style="color: #2aa198;">"73.250.191.162/32"</span>
+<pre class="src src-bash">localip = <span style="color: #2aa198;">"0.0.0.0/0"</span>
 </pre>
 </div>
 
@@ -902,8 +893,8 @@ resource <span style="color: #2aa198;">"aws_security_group"</span> <span style="
 </div>
 </div>
 
-<div id="outline-container-orga1feea4" class="outline-4">
-<h4 id="orga1feea4"><span class="section-number-4">3.5.3</span> Private Instances (Auto-scaling Group)</h4>
+<div id="outline-container-org82c8e19" class="outline-4">
+<h4 id="org82c8e19"><span class="section-number-4">3.5.3</span> Private Instances (Auto-scaling Group)</h4>
 <div class="outline-text-4" id="text-3-5-3">
 <p>
 Access only within VPC
@@ -936,8 +927,8 @@ resource <span style="color: #2aa198;">"aws_security_group"</span> <span style="
 </div>
 </div>
 
-<div id="outline-container-org425f273" class="outline-4">
-<h4 id="org425f273"><span class="section-number-4">3.5.4</span> Database</h4>
+<div id="outline-container-orge2f05f1" class="outline-4">
+<h4 id="orge2f05f1"><span class="section-number-4">3.5.4</span> Database</h4>
 <div class="outline-text-4" id="text-3-5-4">
 <p>
 Only VPC, port 3306 (MYSQL)
@@ -968,12 +959,12 @@ resource <span style="color: #2aa198;">"aws_security_group"</span> <span style="
 </div>
 </div>
 
-<div id="outline-container-org22e11bc" class="outline-3">
-<h3 id="org22e11bc"><span class="section-number-3">3.6</span> S3 Bucket and VPC Endpoint</h3>
+<div id="outline-container-orge97da8d" class="outline-3">
+<h3 id="orge97da8d"><span class="section-number-3">3.6</span> S3 Bucket and VPC Endpoint</h3>
 <div class="outline-text-3" id="text-3-6">
 </div>
-<div id="outline-container-org4f2627e" class="outline-4">
-<h4 id="org4f2627e"><span class="section-number-4">3.6.1</span> VPC Endpoint</h4>
+<div id="outline-container-orgca991bf" class="outline-4">
+<h4 id="orgca991bf"><span class="section-number-4">3.6.1</span> VPC Endpoint</h4>
 <div class="outline-text-4" id="text-3-6-1">
 <div class="org-src-container">
 <pre class="src src-bash">
@@ -1004,8 +995,8 @@ resource <span style="color: #2aa198;">"aws_vpc_endpoint"</span> <span style="co
 </div>
 </div>
 
-<div id="outline-container-org0c04957" class="outline-4">
-<h4 id="org0c04957"><span class="section-number-4">3.6.2</span> S3 Bucket</h4>
+<div id="outline-container-org0609c18" class="outline-4">
+<h4 id="org0609c18"><span class="section-number-4">3.6.2</span> S3 Bucket</h4>
 <div class="outline-text-4" id="text-3-6-2">
 <div class="org-src-container">
 <pre class="src src-bash">variable <span style="color: #2aa198;">"domain_name"</span> <span style="color: #268bd2;">{}</span>
@@ -1046,8 +1037,8 @@ NOTE: Must re-run terraform init to initialize the 'random' plugin
 </div>
 </div>
 
-<div id="outline-container-org19847a2" class="outline-3">
-<h3 id="org19847a2"><span class="section-number-3">3.7</span> RDS</h3>
+<div id="outline-container-orgdf9a1e4" class="outline-3">
+<h3 id="orgdf9a1e4"><span class="section-number-3">3.7</span> RDS</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 Before there was Vault and secure creds creation&#x2026;
@@ -1095,8 +1086,8 @@ implementation of Vault to create dynamic credentials.
 </div>
 </div>
 
-<div id="outline-container-orgd65b472" class="outline-3">
-<h3 id="orgd65b472"><span class="section-number-3">3.8</span> ELB</h3>
+<div id="outline-container-org2cf6deb" class="outline-3">
+<h3 id="org2cf6deb"><span class="section-number-3">3.8</span> ELB</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 TODO :: Update to Application Load Balancer
@@ -1157,8 +1148,8 @@ elb_interval = <span style="color: #2aa198;">"30"</span>
 </div>
 </div>
 
-<div id="outline-container-org8ab841b" class="outline-3">
-<h3 id="org8ab841b"><span class="section-number-3">3.9</span> Creating the Dev Instance</h3>
+<div id="outline-container-org0c5144e" class="outline-3">
+<h3 id="org0c5144e"><span class="section-number-3">3.9</span> Creating the Dev Instance</h3>
 <div class="outline-text-3" id="text-3-9">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">----- Dev -----</span>
@@ -1185,6 +1176,7 @@ resource <span style="color: #2aa198;">"aws_instance"</span> <span style="color:
   iam_instance_profile = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{aws_iam_instance_profile.s3_access_profile.id}</span><span style="color: #2aa198;">"</span>
   subnet_id = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{aws_subnet.wp_public1_subnet.id}</span><span style="color: #2aa198;">"</span>
 
+  <span style="color: #96A7A9; font-style: italic;"># </span><span style="color: #96A7A9; font-style: italic;">user_data = "${data.template_file.user_data.rendered}"</span>
   provisioner <span style="color: #2aa198;">"local-exec"</span> <span style="color: #d33682;">{</span>
     <span style="color: #d33682; font-style: italic;">command</span> = &lt;&lt;EOD
 <span style="color: #2aa198; font-style: italic;">cat</span><span style="color: #2aa198;"> &lt;&lt;EOF &gt; aws_hosts</span>
@@ -1196,10 +1188,9 @@ resource <span style="color: #2aa198;">"aws_instance"</span> <span style="color:
 <span style="color: #2aa198;">EOF</span>
 <span style="color: #2aa198;">EOD</span>
   <span style="color: #d33682;">}</span>
-
-  provisioner <span style="color: #2aa198;">"local-exec"</span> <span style="color: #d33682;">{</span>
-    <span style="color: #d33682; font-style: italic;">command</span> = <span style="color: #2aa198;">"aws ec2 wait instance-status-ok --instance-ids </span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{aws_instance.wp_dev.id}</span><span style="color: #2aa198;"> --profile </span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{var.aws_profile}</span><span style="color: #2aa198;"> &amp;&amp; ansible-playbook -i aws_hosts wordpress.yml"</span>
-  <span style="color: #d33682;">}</span>
+    provisioner <span style="color: #2aa198;">"local-exec"</span> <span style="color: #d33682;">{</span>
+        <span style="color: #d33682; font-style: italic;">command</span> = <span style="color: #2aa198;">"aws ec2 wait instance-status-ok --instance-ids </span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{aws_instance.wp_dev.id}</span><span style="color: #2aa198;"> --profile </span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{var.aws_profile}</span><span style="color: #2aa198;"> &amp;&amp; ansible-playbook -i aws_hosts --extra-vars 'dbname=</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{var.dbname}</span><span style="color: #2aa198;"> dbuser=</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{random_string.username.result}</span><span style="color: #2aa198;"> dbpass=</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{random_string.password.result}</span><span style="color: #2aa198;"> dbaddr=db.</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{var.domain_name}</span><span style="color: #2aa198;">.net' wordpress.yml"</span>
+   <span style="color: #d33682;">}</span>
 <span style="color: #268bd2;">}</span>
 </pre>
 </div>
@@ -1221,8 +1212,8 @@ key_name = <span style="color: #2aa198;">"cloudbase"</span>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf4bce23" class="outline-3">
-<h3 id="orgf4bce23"><span class="section-number-3">3.10</span> Golden AMI</h3>
+<div id="outline-container-orgde711f2" class="outline-3">
+<h3 id="orgde711f2"><span class="section-number-3">3.10</span> Golden AMI</h3>
 <div class="outline-text-3" id="text-3-10">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">----- Golden AMI ------</span>
@@ -1255,8 +1246,8 @@ resource <span style="color: #2aa198;">"aws_ami_from_instance"</span> <span styl
 </div>
 </div>
 
-<div id="outline-container-org95d895d" class="outline-3">
-<h3 id="org95d895d"><span class="section-number-3">3.11</span> Auto-scaling Group and Launch Configuration</h3>
+<div id="outline-container-orgf6ac4b2" class="outline-3">
+<h3 id="orgf6ac4b2"><span class="section-number-3">3.11</span> Auto-scaling Group and Launch Configuration</h3>
 <div class="outline-text-3" id="text-3-11">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">----- Launch Config -----</span>
@@ -1327,8 +1318,8 @@ asg_cap = <span style="color: #2aa198;">"2"</span>
 </div>
 </div>
 
-<div id="outline-container-org06c912a" class="outline-3">
-<h3 id="org06c912a"><span class="section-number-3">3.12</span> Route 53 Records</h3>
+<div id="outline-container-org82b8509" class="outline-3">
+<h3 id="org82b8509"><span class="section-number-3">3.12</span> Route 53 Records</h3>
 <div class="outline-text-3" id="text-3-12">
 <div class="org-src-container">
 <pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">----- Route 53 -----</span>
@@ -1398,8 +1389,8 @@ resource <span style="color: #2aa198;">"aws_route53_record"</span> <span style="
 </div>
 </div>
 
-<div id="outline-container-org864b526" class="outline-2">
-<h2 id="org864b526"><span class="section-number-2">4</span> Ansible</h2>
+<div id="outline-container-orgfc3b5dd" class="outline-2">
+<h2 id="orgfc3b5dd"><span class="section-number-2">4</span> Ansible</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Using the right tool for the job - Terraform is great for infrastructure
@@ -1411,8 +1402,8 @@ Config Note: host<sub>key</sub><sub>checking</sub> = false in /etc/ansible/ansib
 </p>
 </div>
 
-<div id="outline-container-orgb83dc9e" class="outline-3">
-<h3 id="orgb83dc9e"><span class="section-number-3">4.1</span> Install Wordpress</h3>
+<div id="outline-container-org71a51a0" class="outline-3">
+<h3 id="org71a51a0"><span class="section-number-3">4.1</span> Install Wordpress</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-bash">---
@@ -1426,10 +1417,6 @@ Config Note: host<sub>key</sub><sub>checking</sub> = false in /etc/ansible/ansib
       - httpd
       - php
       - php-mysql
-    - name: Download Wordpress
-      get_url: <span style="color: #268bd2;">url</span>=http://wordpress.org/wordpress-latest.tar.gz <span style="color: #268bd2;">dest</span>=/var/www/html/wordpress.tar.gz <span style="color: #268bd2;">force</span>=yes
-    - name: Extract Wordpress
-      <span style="color: #d33682; font-style: italic;">command</span>: <span style="color: #2aa198;">"tar xzf /var/www/html/wordpress.tar.gz -C /var/www/html --strip-components 1"</span>
     - name: Make Dir Tree Readable
       file:
         path: /var/www/html
@@ -1437,14 +1424,46 @@ Config Note: host<sub>key</sub><sub>checking</sub> = false in /etc/ansible/ansib
         recurse: yes
         owner: apache
         group: apache
+    - name: Download Wordpress
+      get_url: <span style="color: #268bd2;">url</span>=http://wordpress.org/wordpress-latest.tar.gz <span style="color: #268bd2;">dest</span>=/var/www/html/wordpress.tar.gz <span style="color: #268bd2;">force</span>=yes
+    - name: Extract Wordpress
+      <span style="color: #d33682; font-style: italic;">command</span>: <span style="color: #2aa198;">"tar xzf /var/www/html/wordpress.tar.gz -C /var/www/html --strip-components 1"</span>
+    - name: Copy wp-config-sample.php to wp-config.php
+      <span style="color: #d33682; font-style: italic;">command</span>: <span style="color: #b58900; font-style: italic;">cp</span> <span style="color: #2aa198;">"/var/www/html/wp-config-sample.php"</span> <span style="color: #2aa198;">"/var/www/html/wp-config.php"</span>
+    - name: Update database credentials<span style="color: #859900;"> in</span> the file
+      replace:
+        path: <span style="color: #2aa198;">"/var/www/html/wp-config.php"</span>
+        regexp: <span style="color: #2aa198;">"password_here"</span>
+        replace: <span style="color: #2aa198;">"{{ dbpass }}"</span>
+
+    - name: Update database name<span style="color: #859900;"> in</span> the file
+      replace:
+        path: <span style="color: #2aa198;">"/var/www/html/wp-config.php"</span>
+        regexp: <span style="color: #2aa198;">"database_name_here"</span>
+        replace: <span style="color: #2aa198;">"{{ dbname }}"</span>
+
+    - name: Update database user<span style="color: #859900;"> in</span> the file
+      replace:
+        path: <span style="color: #2aa198;">"/var/www/html/wp-config.php"</span>
+        regexp: <span style="color: #2aa198;">"username_here"</span>
+        replace: <span style="color: #2aa198;">"{{ dbuser }}"</span>
+
+    - name: Update database address<span style="color: #859900;"> in</span> the file
+      replace:
+        path: <span style="color: #2aa198;">"/var/www/html/wp-config.php"</span>
+        regexp: <span style="color: #2aa198;">"localhost"</span>
+        replace: <span style="color: #2aa198;">"{{ dbaddr }}"</span>
+
+
     - name: Start and enable Apache
       service: <span style="color: #268bd2;">name</span>=httpd <span style="color: #268bd2;">state</span>=started <span style="color: #268bd2;">enabled</span>=yes
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org2fefe8f" class="outline-3">
-<h3 id="org2fefe8f"><span class="section-number-3">4.2</span> S3 Update</h3>
+
+<div id="outline-container-org01c8ccf" class="outline-3">
+<h3 id="org01c8ccf"><span class="section-number-3">4.2</span> S3 Update</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-bash">---
@@ -1466,8 +1485,8 @@ Config Note: host<sub>key</sub><sub>checking</sub> = false in /etc/ansible/ansib
 </div>
 </div>
 
-<div id="outline-container-org501f97f" class="outline-2">
-<h2 id="org501f97f"><span class="section-number-2">5</span> Time to Apply!</h2>
+<div id="outline-container-orgd0f2937" class="outline-2">
+<h2 id="orgd0f2937"><span class="section-number-2">5</span> Time to Apply!</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
 <pre class="src src-bash">ssh-agent bash
@@ -1478,8 +1497,8 @@ terraform
 </div>
 </div>
 
-<div id="outline-container-org78eedb7" class="outline-3">
-<h3 id="org78eedb7"><span class="section-number-3">5.1</span> Next Steps</h3>
+<div id="outline-container-orgd3891c6" class="outline-3">
+<h3 id="orgd3891c6"><span class="section-number-3">5.1</span> Next Steps</h3>
 <div class="outline-text-3" id="text-5-1">
 <ol class="org-ol">
 <li>Visit dev.atcloudbase.net and perform WP initial setup and config</li>
@@ -1491,12 +1510,12 @@ dev)</li>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc463b10" class="outline-2">
-<h2 id="orgc463b10"><span class="section-number-2">6</span> Adding the Vault</h2>
+<div id="outline-container-org3fbcfa0" class="outline-2">
+<h2 id="org3fbcfa0"><span class="section-number-2">6</span> Adding the Vault</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org09f318e" class="outline-3">
-<h3 id="org09f318e"><span class="section-number-3">6.1</span> Deploy Vault in the VPC</h3>
+<div id="outline-container-orga1ea9a7" class="outline-3">
+<h3 id="orga1ea9a7"><span class="section-number-3">6.1</span> Deploy Vault in the VPC</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Deploying vault in the same VPC as WP using existing private subnets.
@@ -1516,7 +1535,8 @@ vault login with token to get it all together
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">variable vc_ami_id <span style="color: #268bd2;">{}</span>
+<pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;"># </span><span style="color: #96A7A9; font-style: italic;">:tangle variables.tf</span>
+variable vc_ami_id <span style="color: #268bd2;">{}</span>
 variable vault_cluster_name <span style="color: #268bd2;">{}</span>
 variable consul_cluster_name <span style="color: #268bd2;">{}</span>
 variable vault_cluster_size <span style="color: #268bd2;">{}</span>
@@ -1528,7 +1548,8 @@ variable consul_cluster_tag_key <span style="color: #268bd2;">{}</span>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-bash">vc_ami_id = <span style="color: #2aa198;">"ami-0d3b2cf862bc2d41b"</span>
+<pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#  </span><span style="color: #96A7A9; font-style: italic;">:tangle terraform.tfvars</span>
+vc_ami_id = <span style="color: #2aa198;">"ami-0d3b2cf862bc2d41b"</span>
 vault_cluster_name = <span style="color: #2aa198;">"vault-s3"</span>
 consul_cluster_name = <span style="color: #2aa198;">"consul-s3"</span>
 vault_cluster_size = <span style="color: #2aa198;">"3"</span>
@@ -1703,12 +1724,12 @@ data <span style="color: #2aa198;">"template_file"</span> <span style="color: #2
 
 
 
-<div id="outline-container-orgfcbc327" class="outline-3">
-<h3 id="orgfcbc327"><span class="section-number-3">6.2</span> <a href="https://www.youtube.com/watch?time_continue=1&amp;v=W30HKivEFWg">Security in depth with terraform and vault</a></h3>
+<div id="outline-container-org9231829" class="outline-3">
+<h3 id="org9231829"><span class="section-number-3">6.2</span> <a href="https://www.youtube.com/watch?time_continue=1&amp;v=W30HKivEFWg">Security in depth with terraform and vault</a></h3>
 <div class="outline-text-3" id="text-6-2">
 </div>
-<div id="outline-container-org627921a" class="outline-4">
-<h4 id="org627921a"><span class="section-number-4">6.2.1</span> basic principles for securing terraform state</h4>
+<div id="outline-container-org2600225" class="outline-4">
+<h4 id="org2600225"><span class="section-number-4">6.2.1</span> basic principles for securing terraform state</h4>
 <div class="outline-text-4" id="text-6-2-1">
 <p>
 terraform state can contain sensitive data in the first place
@@ -1721,8 +1742,8 @@ use an encrypted backend (encrypted s3)
 </div>
 </div>
 
-<div id="outline-container-org489e46e" class="outline-4">
-<h4 id="org489e46e"><span class="section-number-4">6.2.2</span> secrets generation and management in terraform</h4>
+<div id="outline-container-org3344685" class="outline-4">
+<h4 id="org3344685"><span class="section-number-4">6.2.2</span> secrets generation and management in terraform</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 terraform can generate random username/passwords
@@ -1732,8 +1753,8 @@ resource "vault<sub>dynamic</sub><sub>secret</sub>" "credentials"
 </p>
 </div>
 </div>
-<div id="outline-container-org30aa2f6" class="outline-4">
-<h4 id="org30aa2f6"><span class="section-number-4">6.2.3</span> showcasae dynamic secrets engine with vault</h4>
+<div id="outline-container-org51048b3" class="outline-4">
+<h4 id="org51048b3"><span class="section-number-4">6.2.3</span> showcasae dynamic secrets engine with vault</h4>
 <div class="outline-text-4" id="text-6-2-3">
 <p>
 better option! dynamic secrets backend
@@ -1743,12 +1764,12 @@ securly interact with the database from the application
 </div>
 </div>
 
-<div id="outline-container-orgcf2ccae" class="outline-4">
-<h4 id="orgcf2ccae"><span class="section-number-4">6.2.4</span> example terraform/vault integrations</h4>
+<div id="outline-container-orge4019b2" class="outline-4">
+<h4 id="orge4019b2"><span class="section-number-4">6.2.4</span> example terraform/vault integrations</h4>
 </div>
 </div>
-<div id="outline-container-orga0c05ab" class="outline-3">
-<h3 id="orga0c05ab"><span class="section-number-3">6.3</span> Using dynamic secrets to generate access credentials for secure terraform use</h3>
+<div id="outline-container-orgbd3bd9b" class="outline-3">
+<h3 id="orgbd3bd9b"><span class="section-number-3">6.3</span> Using dynamic secrets to generate access credentials for secure terraform use</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 Admin setup of backend role
@@ -1795,8 +1816,8 @@ provider <span style="color: #2aa198;">"aws"</span> <span style="color: #268bd2;
 </div>
 </div>
 
-<div id="outline-container-org6ed9f7b" class="outline-3">
-<h3 id="org6ed9f7b"><span class="section-number-3">6.4</span> Generating random DB credentials and storing them in vault</h3>
+<div id="outline-container-org195d1ee" class="outline-3">
+<h3 id="org195d1ee"><span class="section-number-3">6.4</span> Generating random DB credentials and storing them in vault</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
 Configuring Vault
@@ -1804,7 +1825,8 @@ Configuring Vault
 
 <div class="org-src-container">
 <pre class="src src-bash">provider <span style="color: #2aa198;">"vault"</span> <span style="color: #268bd2;">{</span>
-    skip_tls_verify = true
+  address = <span style="color: #2aa198;">"http://127.0.0.1:8200"</span>
+  token = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{var.vault_token}</span><span style="color: #2aa198;">"</span>
 <span style="color: #268bd2;">}</span>
 
 </pre>
@@ -1839,7 +1861,6 @@ resource <span style="color: #2aa198;">"vault_generic_secret"</span> <span style
 <span style="color: #2aa198;">EOT</span>
 <span style="color: #268bd2;">}</span>
 
-<span style="color: #96A7A9; font-style: italic;"># </span><span style="color: #96A7A9; font-style: italic;">Db instances</span>
 
 resource <span style="color: #2aa198;">"aws_db_instance"</span> <span style="color: #2aa198;">"wp_db"</span> <span style="color: #268bd2;">{</span>
   allocated_storage = <span style="color: #6c71c4; font-weight: bold;">10</span>
@@ -1858,32 +1879,107 @@ resource <span style="color: #2aa198;">"aws_db_instance"</span> <span style="col
 
 <div class="org-src-container">
 <pre class="src src-bash">variable <span style="color: #2aa198;">"service_name"</span> <span style="color: #268bd2;">{}</span>
+variable <span style="color: #2aa198;">"blog_name"</span> <span style="color: #268bd2;">{}</span>
+variable <span style="color: #2aa198;">"vault_token"</span> <span style="color: #268bd2;">{}</span>
 </pre>
 </div>
 
 <div class="org-src-container">
 <pre class="src src-bash">service_name = <span style="color: #2aa198;">"secret"</span>
+blog_name = <span style="color: #2aa198;">"At Cloudbase"</span>
+vault_token = <span style="color: #2aa198;">"s.Q08DkKLVIkDJy2vQpcUliLYE"</span>
+</pre>
+</div>
+
+<p>
+New user<sub>data</sub> script for the dev instance using the credentials and pre-configuring Wordpress
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">
+<span style="color: #96A7A9; font-style: italic;"># </span><span style="color: #96A7A9; font-style: italic;">Auto-install Wordpress With Creds and wp-config.php already sorted</span>
+
+data <span style="color: #2aa198;">"template_file"</span> <span style="color: #2aa198;">"user_data"</span> <span style="color: #268bd2;">{</span>
+  template = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{file("</span><span style="color: #268bd2;">user_data.tpl</span><span style="color: #268bd2;">")}</span><span style="color: #2aa198;">"</span>
+
+  vars <span style="color: #d33682;">{</span>
+   dbuser = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{random_string.username.result}</span><span style="color: #2aa198;">"</span>,
+   dbpass = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{random_string.password.result}</span><span style="color: #2aa198;">"</span>,
+   dbname = <span style="color: #2aa198;">"</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{var.dbname}</span><span style="color: #2aa198;">"</span>
+  <span style="color: #d33682;">}</span>
+<span style="color: #268bd2;">}</span>
+</pre>
+</div>
+
+<p>
+Auto-config user<sub>data</sub> script
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">!/usr/bin/</span><span style="color: #859900;">env</span><span style="color: #96A7A9; font-style: italic;"> bash</span>
+
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">download wordpress</span>
+<span style="color: #b58900; font-style: italic;">curl</span> -O https://wordpress.org/latest.tar.gz
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">unzip wordpress</span>
+tar -zxvf latest.tar.gz
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">change dir to wordpress</span>
+<span style="color: #b58900; font-style: italic;">cd</span> wordpress
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">copy file to parent dir</span>
+<span style="color: #b58900; font-style: italic;">cp</span> -rf . ..
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">move back to parent dir</span>
+<span style="color: #b58900; font-style: italic;">cd</span> ..
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">remove files from wordpress folder</span>
+<span style="color: #b58900; font-style: italic;">rm</span> -R wordpress
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">create wp config</span>
+<span style="color: #b58900; font-style: italic;">cp</span> wp-config-sample.php wp-config.php
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">set database details with perl </span><span style="color: #96A7A9; font-style: italic;">find</span><span style="color: #96A7A9; font-style: italic;"> and replace</span>
+perl -pi -e <span style="color: #2aa198;">"s/database_name_here/</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{dbname}</span><span style="color: #2aa198;">/g"</span> wp-config.php
+perl -pi -e <span style="color: #2aa198;">"s/username_here/</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{dbuser}</span><span style="color: #2aa198;">/g"</span> wp-config.php
+perl -pi -e <span style="color: #2aa198;">"s/password_here/</span><span style="color: #6c71c4;">$</span><span style="color: #268bd2;">{dbpass}</span><span style="color: #2aa198;">/g"</span> wp-config.php
+
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">set WP salts</span>
+perl -i -pe<span style="color: #2aa198;">'</span>
+<span style="color: #2aa198;">  BEGIN {</span>
+<span style="color: #2aa198;">    @chars = ("a" .. "z", "A" .. "Z", 0 .. 9);</span>
+<span style="color: #2aa198;">    push @chars, split //, "!@#$%^&amp;*()-_ []{}&lt;&gt;~\`+=,.;:/?|";</span>
+<span style="color: #2aa198;">    sub salt { join "", map $chars[ rand @chars ], 1 .. 64 }</span>
+<span style="color: #2aa198;">  }</span>
+<span style="color: #2aa198;">  s/put your unique phrase here/salt()/ge</span>
+<span style="color: #2aa198;">'</span> wp-config.php
+
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">create uploads folder and set permissions</span>
+<span style="color: #b58900; font-style: italic;">mkdir</span> wp-content/uploads
+<span style="color: #b58900; font-style: italic;">chmod</span> <span style="color: #6c71c4; font-weight: bold;">775</span> wp-content/uploads
+<span style="color: #b58900; font-style: italic;">echo</span> <span style="color: #2aa198;">"Cleaning..."</span>
+<span style="color: #96A7A9; font-style: italic;">#</span><span style="color: #96A7A9; font-style: italic;">remove zip file</span>
+<span style="color: #b58900; font-style: italic;">rm</span> latest.tar.gz
+
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgcc9a56c" class="outline-2">
-<h2 id="orgcc9a56c"><span class="section-number-2">7</span> TODOS <code>[0/2]</code></h2>
+<div id="outline-container-org34ae8d4" class="outline-2">
+<h2 id="org34ae8d4"><span class="section-number-2">7</span> TODOS <code>[0/2]</code></h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgf40d51c" class="outline-3">
-<h3 id="orgf40d51c"><span class="section-number-3">7.1</span> <span class="todo TODO">TODO</span> Add a bastion host to get into production via SSH</h3>
+<div id="outline-container-orgeca326a" class="outline-3">
+<h3 id="orgeca326a"><span class="section-number-3">7.1</span> <span class="todo TODO">TODO</span> Add a bastion host to get into production via SSH</h3>
 </div>
-<div id="outline-container-orga3c9f0f" class="outline-3">
-<h3 id="orga3c9f0f"><span class="section-number-3">7.2</span> <span class="todo TODO">TODO</span> Secure key access to bastion host with Vault</h3>
+<div id="outline-container-org6776e5b" class="outline-3">
+<h3 id="org6776e5b"><span class="section-number-3">7.2</span> <span class="todo TODO">TODO</span> Secure key access to dev host with Vault</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+<a href="https://learn.hashicorp.com/vault/secrets-management/sm-ssh-otp">https://learn.hashicorp.com/vault/secrets-management/sm-ssh-otp</a>
+</p>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Alex Springer</p>
-<p class="date">Created: 2019-03-10 Sun 13:42</p>
+<p class="date">Created: 2019-03-11 Mon 13:36</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
