@@ -206,7 +206,7 @@ vault write database/roles/my-role \
 vault read database/creds/my-role
 
 # login to the DB to confirm lease
-mysql -u v-root-my-role-25lpj8pMP3Gy24OFm -p
+mysql -u -p
 SHOW GRANTS;
 ,#+---------------------------------------------------------------+
 #| Grants for v-root-my-role-25lpj8pMP3Gy24OFm@%                 |
@@ -219,7 +219,23 @@ vault lease revoke database/creds/my-role/b70f4581-55de-d7e5-11d2-f543f3f120ee
 
 #+END_SRC
 
-*** Dev Server SSH
+*** Dev Server SSH - OTP
+
+Install vault-ssh-helper on target server: https://github.com/hashicorp/vault-ssh-helper
+#+BEGIN_SRC bash
+# Enable the secrets engine
+vault secrets enable ssh
+
+# Create key role
+vault write ssh/roles/otp_key_role \
+    key_type=otp \
+    default_user=vaulter \
+    cidr_list=134.209.125.174/32
+
+vault write ssh/creds/otp_key_role ip=134.209.125.174
+
+ssh vaulter@134.209.125.174
+#+END_SRC
 
 * Config
 ** Development Machine Setup
