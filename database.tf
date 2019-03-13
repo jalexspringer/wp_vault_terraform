@@ -14,19 +14,6 @@ resource "random_string" "password" {
   special = false
 }
 
-# Store the creds in vault
-
-resource "vault_generic_secret" "credentials" {
-  path = "${var.service_name}/credentials/database/${var.dbname}"
-  data_json = <<EOT
- {
-   "username": "${random_string.username.result}",
-   "password": "${random_string.password.result}"
- }
-EOT
-}
-
-
 resource "aws_db_instance" "wp_db" {
   allocated_storage = 10
   engine = "mysql"

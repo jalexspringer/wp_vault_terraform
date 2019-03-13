@@ -20,6 +20,207 @@ Vault to centralize control and auditing of secrets and access rights.
 ** WP Deployment
 [[img:plan.png][Architecture Diagram]]
 
+** Vault Demo
+*** General Credential Storage
+Simple key/value pair storage and access in Vault
+
+#+BEGIN_SRC bash :results raw drawer
+export VAULT_ADDR=http://127.0.0.1:8200
+vault kv put secret/wprds user=dbuser pass=dbpass
+vault kv get secret/wprds
+#+END_SRC
+
+#+RESULTS:
+:results:
+Key              Value
+---              -----
+created_time     2019-03-12T19:44:30.819945438Z
+deletion_time    n/a
+destroyed        false
+version          2
+====== Metadata ======
+Key              Value
+---              -----
+created_time     2019-03-12T19:44:30.819945438Z
+deletion_time    n/a
+destroyed        false
+version          2
+
+==== Data ====
+Key     Value
+---     -----
+pass    dbpass
+user    dbuser
+:end:
+
+*** AWS IAM Credentials
+Create the role for Vault to use and write the credentials:
+#+BEGIN_SRC bash
+export VAULT_ADDR=http://127.0.0.1:8200
+vault write aws/config/root \
+    access_key=ACCESS_KEY_ID \
+    secret_key=SECRET_ACCESS_KEY
+#+END_SRC
+
+#+BEGIN_SRC bash :tangle vault_demo/vault_policy.policy
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachUserPolicy",
+                "iam:CreateAccessKey",
+                "iam:CreateUser",
+                "iam:DeleteAccessKey",
+                "iam:DeleteUser",
+                "iam:DeleteUserPolicy",
+                "iam:DetachUserPolicy",
+                "iam:ListAccessKeys",
+                "iam:ListAttachedUserPolicies",
+                "iam:ListGroupsForUser",
+                "iam:ListUserPolicies",
+                "iam:PutUserPolicy",
+                "iam:RemoveUserFromGroup"
+            ],
+            "Resource": [
+                "arn:aws:iam::ACCOUNT_ID:user/vault-*"
+            ]
+        }
+    ]
+}
+#+END_SRC
+
+Create a role in Vault for the new IAM users. In this instance, S3 CRUD rights.
+#+BEGIN_SRC bash
+export VAULT_ADDR=http://127.0.0.1:8200
+vault write aws/roles/s3-all-crud-role policy=-<<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+EOF
+
+vault write aws/config/lease lease=1m lease_max=5m
+#+END_SRC
+
+#+RESULTS:
+: Success! Data written to: aws/config/lease
+
+Then read from the secrets engine to get the credentials:
+#+BEGIN_SRC bash :results raw drawer
+export VAULT_ADDR=http://127.0.0.1:8200
+vault read -format=json aws/creds/s3-all-crud-role
+#+END_SRC
+
+#+RESULTS:
+:results:
+{
+  "request_id": "1bc47c84-0b49-fa80-1935-bf31d0365838",
+  "lease_id": "aws/creds/s3-all-crud-role/707D7ObyJWqYOXZbIohav3NF",
+  "lease_duration": 60,
+  "renewable": true,
+  "data": {
+    "access_key": "AKIAIKQ3WHD5J3LFLXLQ",
+    "secret_key": "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",
+    "security_token": null
+  },
+  "warnings": null
+}
+:end:
+
+*** MySQL DB Credentials
+Docker Compose for Linked Containers
+#+BEGIN_SRC bash
+version: '3.6'
+
+services:
+
+  vault:
+    build:
+      context: ./vault
+      dockerfile: Dockerfile
+    ports:
+      - 8200:8200
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/policies:/vault/policies
+      - ./vault/data:/vault/data
+      - ./vault/logs:/vault/logs
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+    command: server -config=/vault/config/vault-config.json
+    cap_add:
+      - IPC_LOCK
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'vault'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'vaultpass'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'rootpass'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql
+# Names our volume
+volumes:
+  my-db:
+
+#+END_SRC
+
+Vault database engine
+#+BEGIN_SRC bash
+# Enable the plugin/engine
+vault secrets enable database
+
+# Configure the endpoint with credentials with appropriate permissions. Root used only for example purposes.
+# For additional security! Role can be tied to the IP of the specific db instance
+vault write database/config/vdb plugin_name=mysql-database-plugin connection_url="root:rootpass@tcp(172.18.0.3:3306)/" allowed_roles="my-role"
+vault write database/roles/my-role \
+   db_name=vdb \
+   creation_statements="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON *.* TO '{{name}}'@'%';" \
+   default_ttl="1h" \
+   max_ttl="24h"
+
+# Read creates new credentials with a defined TTL and the permissions granted in 'my-role' above (GRANT SELECT * ON *.* TO '{{name}}'@'%';)
+vault read database/creds/my-role
+
+# login to the DB to confirm lease
+mysql -u v-root-my-role-25lpj8pMP3Gy24OFm -p
+SHOW GRANTS;
+,#+---------------------------------------------------------------+
+#| Grants for v-root-my-role-25lpj8pMP3Gy24OFm@%                 |
+,#+---------------------------------------------------------------+
+#| GRANT SELECT ON *.* TO 'v-root-my-role-25lpj8pMP3Gy24OFm'@'%' |
+,#+---------------------------------------------------------------+
+
+# revoke lease early
+vault lease revoke database/creds/my-role/b70f4581-55de-d7e5-11d2-f543f3f120ee
+
+#+END_SRC
+
+*** Dev Server SSH
+
 * Config
 ** Development Machine Setup
 *** Tools
@@ -59,13 +260,15 @@ aws route53 create-reusable-delegation-set --caller-reference 1224 --profile cb
 
 Keeping secrets from git
 #+BEGIN_SRC bash :tangle .gitignore
-**/.terraform/*
-*.tfstate
-*.tfstate.*
-*.tfvars
+,**/.terraform/*
+,*.tfstate
+,*.tfstate.*
+,*.tfvars
 .terraform
-*.plan
+,*.plan
 credentials.csv
+img/
+*lock*
 #+END_SRC
 
 ** Region and profile setup
@@ -1241,16 +1444,6 @@ provider "aws" {
 :header-args: :padline no :results raw :tangle database.tf
 :END:
 
-Configuring Vault
-
-#+BEGIN_SRC bash :tangle config.tf
-provider "vault" {
-  address = "http://127.0.0.1:8200"
-  token = "${var.vault_token}"
-}
-
-#+END_SRC
-
 #+BEGIN_SRC bash
 #----- RDS ------
 
@@ -1267,19 +1460,6 @@ resource "random_string" "password" {
   length = 16
   special = false
 }
-
-# Store the creds in vault
-
-resource "vault_generic_secret" "credentials" {
-  path = "${var.service_name}/credentials/database/${var.dbname}"
-  data_json = <<EOT
- {
-   "username": "${random_string.username.result}",
-   "password": "${random_string.password.result}"
- }
-EOT
-}
-
 
 resource "aws_db_instance" "wp_db" {
   allocated_storage = 10

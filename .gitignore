@@ -5,3 +5,5 @@
 .terraform
 *.plan
 credentials.csv
+img/
+*lock*
