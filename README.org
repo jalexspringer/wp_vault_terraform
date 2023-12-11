@@ -1,4 +1,4 @@
-#+TITLE: Flux7 WP/Vault Presentation
+#+TITLE: Vault Presentation
 #+AUTHOR: Alex Springer
 * Introduction
 Walking through creating a highly available Wordpress blog using AWS and
